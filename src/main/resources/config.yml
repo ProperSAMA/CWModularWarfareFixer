@@ -1,0 +1,8 @@
+WarfareList:
+    FULL:
+    - MODULARWARFARE_MWSWEAPON_SMG45
+    SEMI:
+    - MODULARWARFARE_MWSWEAPON_P88
+FiremodeNBT:
+    FULL: "CAAAAARmdWxs\r\n"
+    SEMI: "CAAAAARmdWxs\r\n"

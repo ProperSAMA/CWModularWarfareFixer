@@ -1,0 +1,9 @@
+name: CWModularWarfareFixer
+main: com.propersama.cwmodularwarfarefixer.CWModularWarfareFixer
+version: 1.0.0
+commands:
+  cwmodularwarfarefixer:
+    usage: |
+      §a/<command> add <lore> §e把手上物品的时装nbt保存到这个lore
+      §a/<command> remove <lore> §e删除这个lore
+    permission: cwmodularwarfarefixer.admin

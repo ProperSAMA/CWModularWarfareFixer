@@ -1,0 +1,2 @@
+# CWModularWarfareFixer
+Spigot插件，修复指令获取的ModularWarfare枪械无法射击的问题

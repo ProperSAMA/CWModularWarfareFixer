@@ -43,24 +43,10 @@ public class Utils {
         return (item == null) || (item.getType() == Material.AIR) || (item.getAmount() == 0);
     }
 
-    public static List<String> getLore(ItemStack item) {
-        return item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList();
-    }
-
     public static void putNbtBase(ItemStack item, String key, NbtBase<?> nbtBase) {
         NbtCompound nbtCompound = NbtFactory.asCompound(NbtFactory.fromItemTag(item));
         nbtCompound.put(key, nbtBase);
         NbtFactory.setItemTag(item, nbtCompound);
-    }
-
-    public static void updateItem(ItemStack item, String data) {
-        NbtBase nbtBase = Utils.string2Nbt(data);
-        Utils.putNbtBase(item, "firemode", nbtBase);
-    }
-
-    public static void setFiremodeNBT(Player player, NbtBase nbtBase) {
-        ItemStack item = player.getItemInHand();
-        Utils.putNbtBase(item, "firemode", nbtBase);
     }
 
     public static String getFiremode(Player player, String itemType) {
@@ -80,5 +66,37 @@ public class Utils {
             }
         }
         return "UNKNOWN";
+    }
+
+    public static boolean warfareHasFiremode(ItemStack item) {
+        NbtBase nbtBase = Utils.getItemCompoundByKey(item, "firemode");
+        if(nbtBase == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void initFiremode(Player player, ItemStack item) {
+        FileConfiguration config = CWModularWarfareFixer.instance.getConfig();
+        String fullData = config.getString("FiremodeNBT.FULL");
+        String semiData = config.getString("FiremodeNBT.SEMI");
+        NbtBase<?> fullNbtBase = Utils.string2Nbt(fullData);
+        NbtBase<?> semiNbtBase = Utils.string2Nbt(semiData);
+
+        if(Utils.itemIsEmpty(item)) {
+            return;
+        }
+        if(Utils.warfareHasFiremode(item)) {
+            return;
+        }
+        if(Utils.getFiremode(player, item.toString()).equals("FULL")) {
+            Utils.putNbtBase(player.getItemInHand(), "firemode", fullNbtBase);
+            //player.sendMessage("已将 " + item.getType().toString() + " 的射击模式设为FULL");
+            return;
+        }
+        if(Utils.getFiremode(player, item.toString()).equals("SEMI")) {
+            Utils.putNbtBase(player.getItemInHand(), "firemode", semiNbtBase);
+            //player.sendMessage("已将 " + item.getType().toString() + " 的射击模式设为SEMI");
+        }
     }
 }

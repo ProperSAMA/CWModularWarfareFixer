@@ -1,9 +1,13 @@
 name: CWModularWarfareFixer
+author: ProperSAMA
 main: com.propersama.cwmodularwarfarefixer.CWModularWarfareFixer
 version: 1.0.0
+depend: [ProtocolLib]
+description: 修复指令获取的ModularWarfare枪械无法射击的问题
 commands:
   cwmodularwarfarefixer:
+    aliases: cwmwf
     usage: |
-      §a/<command> add <lore> §e把手上物品的时装nbt保存到这个lore
-      §a/<command> remove <lore> §e删除这个lore
+      /<command> save <FULL/SEMI> 保存手上枪械的射击模式nbt，此后将按照此nbt设置其他枪械
+      /<command> update 按照枪械Type设置射击模式，一般用不上
     permission: cwmodularwarfarefixer.admin

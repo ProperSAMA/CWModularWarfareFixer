@@ -5,6 +5,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,39 +22,26 @@ public final class CWModularWarfareFixer extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
         Config.load();
+
+        getServer().getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onPlayerInteract(PlayerInteractEvent event) {
+                ItemStack item = event.getItem();
+                Player player = event.getPlayer();
+
+                Utils.initFiremode(player, item);
+            }
+        }, this);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         FileConfiguration config = CWModularWarfareFixer.instance.getConfig();
 
-        if (((sender instanceof Player)) && (args.length > 1) && ("add".equalsIgnoreCase(args[0]))) {
-            Player player = (Player)sender;
-            ItemStack itemInHand = player.getItemInHand();
-            if (Utils.itemIsEmpty(itemInHand)) {
-                sender.sendMessage("§c手上的物品是空的");
-                return true;
-            }
-
-            String lore = String.join(" ", args).replace(args[0] + " ", "");
-
-            NbtBase nbtBase = Utils.getItemCompoundByKey(itemInHand, "firemode");
-            if (nbtBase == null) {
-                sender.sendMessage("§c手上的物品没有 时装");
-                return true;
-            }
-            String nbt2String = Utils.nbt2String(nbtBase);
-            Config.add(lore, nbt2String);
-            sender.sendMessage("§a已经添加: \n§6" + lore + " \n§c" + nbtBase);
-            return true;
+        if (((sender instanceof Player)) && args.length <= 0) {
+            return false;
         }
-        if ((args.length > 1) && ("remove".equalsIgnoreCase(args[0]))) {
-            String lore = String.join(" ", args).replace(args[0] + " ", "");
-            Config.remove(lore);
-            sender.sendMessage("§a已经删除: \n§6" + lore);
-            return true;
-        }
-//分割线
+
         if (((sender instanceof Player)) && (args.length > 1) && ("save".equalsIgnoreCase(args[0]))) {
             Player player = (Player)sender;
             ItemStack itemInHand = player.getItemInHand();
@@ -98,7 +88,6 @@ public final class CWModularWarfareFixer extends JavaPlugin {
             }
             return true;
         }
-
         return false;
     }
 
